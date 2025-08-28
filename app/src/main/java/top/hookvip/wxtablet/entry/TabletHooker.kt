@@ -1,5 +1,6 @@
 package top.hookvip.wxtablet.entry
 
+import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.Button
@@ -19,40 +20,22 @@ object TabletHooker : YukiBaseHooker() {
     override fun onHook() {
         if (isWeChat() && doHostInit(this)) {
 
-            YLog.debug("start hook wechat tablet(${HostInfo.toVerStr()})")
+            YLog.warn("start hook wechat tablet(${HostInfo.toVerStr()})")
 
-            /*"com.tencent.tinker.loader.app.TinkerApplication".toAppClass()
-                .constructor { paramCount(6) }
-                .hook { before { args(0).set(7) } }*/
-
-            /*"com.tencent.tinker.loader.shareutil.SharePatchFileUtil".toAppClassOrNull()
-                ?.method {
-                    name = "getPatchInfoFile"
-                    param(String::class.java)
-                }?.hook {
-                    replaceAny {
-                        val file = File(args(0).cast<String>(), "patch_meta.info")
-                        when {
-                            file.exists() -> file.delete()
-                        }
-                        file
-                    }
-                }*/
-
-            "com.tencent.tinker.loader.TinkerLoader".toClass().method {
-                name("tryLoad")
-                param("com.tencent.tinker.loader.app.TinkerApplication".toClass())
+            "com.tencent.tinker.loader.app.TinkerApplication".toClass().method {
+                name("onBaseContextAttached")
+                param(Context::class.java, Long::class.java, Long::class.java)
             }.hook {
                 after {
-                    val tinkerApplication = args(0).cast<Any>()!!
+                    val tinkerApplication = instance
                     val classloader = tinkerApplication.javaClass.method { name = "getClassLoader";superClass() }.get(tinkerApplication).invoke<ClassLoader>()!!
                     HostInfo.appClassLoader = classloader
 
                     YLog.warn("TinkerLoader.tryLoad -> classloader = $classloader")
                     YLog.warn("TinkerLoader.tryLoad -> instanceClassloader = ${instance.javaClass.classLoader}")
 
-                    val intent = result<Intent>()!!
-                    intent.extras?.let {
+                    val intent = tinkerApplication.javaClass.field { name("tinkerResultIntent");superClass() }.get(tinkerApplication).cast<Intent>()
+                    intent?.extras?.let {
                         for (key in it.keySet()) {
                             YLog.warn("TinkerLoader.tryLoad -> ResultIntent($key = ${it.get(key)})")
                         }
@@ -96,6 +79,8 @@ object TabletHooker : YukiBaseHooker() {
             verCode = buildConfigClass.field { name = "VERSION_CODE" }.get().int()
             clientVer = buildConfigClass.field { name = "CLIENT_VERSION_ARM64" }.get().string()
         }
+        YLog.warn("checkPadTablet = ${WXConfig.checkPadTablet}")
+        YLog.warn("visibleLoginButton = ${WXConfig.visibleLoginButton}")
         return true
     }
 }
