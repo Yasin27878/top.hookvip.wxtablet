@@ -44,7 +44,7 @@ libraries:
       version: 1.0.7
   org.luckypray:
     dexkit:
-      version: 2.0.5
+      version: 2.0.6
   io.github.billywei01:
     fastkv:
       version: 2.6.0
