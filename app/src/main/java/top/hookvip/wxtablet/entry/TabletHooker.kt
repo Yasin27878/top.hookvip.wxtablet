@@ -44,7 +44,7 @@ object TabletHooker : YukiBaseHooker() {
                     WXConfig.apply {
                         checkPadTablet?.hook {
                             after {
-                                result = !Throwable().stackTraceToString().contains("com.tencent.mm.pluginsdk.ui.chat.ChatFooter")
+                                result = !Throwable().stackTraceToString().contains("com.tencent.mm.pluginsdk.ui.chat")
                             }
                         }
                         visibleLoginButton?.hook {
