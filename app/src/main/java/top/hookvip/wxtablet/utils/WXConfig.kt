@@ -11,7 +11,7 @@ object WXConfig {
     private object MethodCheckPadTablet : DescriptorData("WXConfig.MethodCheckPadTablet")
     private object MethodVisibleLoginButton : DescriptorData("WXConfig.MethodVisibleLoginButton")
 
-    private val config = FastKv("WXConfig")
+    private val config = FastKv("WXConfigV2")
     private val bridge by lazy {
         YLog.warn("start dexkit find config apply to cache(${HostInfo.toVerStr()})")
         System.loadLibrary("dexkit");

@@ -20,7 +20,7 @@ class FastKv @JvmOverloads constructor(
     companion object {
         private var storePath = ""
 
-        private var globalPassword = "|aesKey&&aesIv|"
+        private var globalPassword = "|aesKey&&aesIv!|"
 
         /**
          * 初始化 传入文件夹路径
