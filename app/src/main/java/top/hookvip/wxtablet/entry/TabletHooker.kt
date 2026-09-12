@@ -3,7 +3,6 @@ package top.hookvip.wxtablet.entry
 import android.content.Context
 import android.content.Intent
 import android.view.View
-import android.widget.Button
 import androidx.core.view.isGone
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.field
@@ -49,7 +48,7 @@ object TabletHooker : YukiBaseHooker() {
                         }
                         visibleLoginButton?.hook {
                             before {
-                                args(0).cast<Button>()?.let { loginButton ->
+                                args(0).cast<View>()?.let { loginButton ->
                                     if (loginButton.isGone) {
                                         loginButton.visibility = View.VISIBLE
                                     }
